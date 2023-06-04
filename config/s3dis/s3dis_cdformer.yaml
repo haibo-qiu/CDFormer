@@ -1,0 +1,88 @@
+DATA:
+  data_name: s3dis
+  data_root: dataset/s3dis/stanford_indoor3d/ # Fill in the pre-processed data path (which contains the .npy files)
+  test_area: 5
+  classes: 13
+  fea_dim: 6
+  voxel_size: 0.04
+  voxel_max: 80000
+  loop: 30
+
+TRAIN:
+  net: cdformer_seg 
+  stem_transformer: True
+  use_xyz: True
+  sync_bn: True  # adopt sync_bn or not
+  downsample_scale: 8
+  num_layers: 4 
+  depths: [2, 2, 6, 2] 
+  channels: [48, 96, 192, 384] 
+  num_heads: [3, 6, 12, 24] 
+  up_k: 3
+  drop_path_rate: 0.3
+  concat_xyz: True
+  grid_size: 0.04
+  max_batch_points: 640000
+  max_num_neighbors: 34 # For KPConv
+  ratio: 0.25
+  k: [[16,16,16],[16,16,16],[16,16,16],[16,16,16]]
+
+  # training
+  aug: True
+  wandb: False
+  transformer_lr_scale: 0.1
+  jitter_sigma: 0.005
+  jitter_clip: 0.02
+  scheduler_update: epoch 
+  scheduler: MultiStep 
+  power: 2.0
+  warmup: linear
+  warmup_iters: 1500
+  warmup_ratio: 0.000001
+  warmup_epochs: 2
+  warmup_gamma: 0.5
+  warmup_cycle_ratio: 0.5
+  use_amp: True
+  optimizer: AdamW 
+  ignore_label: 255
+  train_gpu: [0, 1, 2, 3]
+  workers: 8  # data loader workers
+  batch_size: 1  # batch size for training
+  batch_size_val: 1  # batch size for validation during training, memory and speed tradeoff
+  base_lr: 0.006
+  epochs: 100
+  milestones: [60, 80]
+  start_epoch: 0
+  step_epoch: 30
+  multiplier: 0.1
+  momentum: 0.9
+  weight_decay: 0.01
+  label_smoothing: 0.2
+  drop_rate: 0.5
+  manual_seed: 123
+  print_freq: 10
+  save_freq: 1
+  save_path: output/s3dis/cdformer/
+  weight:  # path to initial weight (default: none)
+  resume:  # path to latest checkpoint (default: none)
+  evaluate: True  # evaluate on validation set, extra gpu memory needed and small batch_size_val is recommend
+  eval_freq: 1
+  debug: 1
+Distributed:
+  multi_node: 0
+  dist_url: tcp://localhost:8888
+  dist_backend: 'nccl'
+  multiprocessing_distributed: True
+  world_size: 1
+  rank: 0
+
+TEST:
+  test_list: dataset/s3dis/list/val5.txt
+  test_list_full: dataset/s3dis/list/val5_full.txt
+  split: val  # split in [train, val and test]
+  test_gpu: [0]
+  test_workers: 8
+  batch_size_test: 4
+  model_path: # Fill the path of the trained .pth file model
+  save_folder: # Fill the path to store the .npy files for each scene
+  names_path: dataset/s3dis/s3dis_names.txt

@@ -1,0 +1,94 @@
+DATA:
+  data_name: shapenetpart
+  data_root: dataset/shapenetpart/shapenetcore_partanno_segmentation_benchmark_v0_normal
+  classes: 50
+  shape_classes: 16
+  fea_dim: 7
+
+TRAIN:
+  net: cdformer_partseg 
+  stem_transformer: True
+  loss: SmoothCrossEntropy  # Poly1FocalLoss
+  label_smoothing: 0.2
+  refine: True
+  refine_n: 10
+  cur_time: 2022-10-01-12-00-00
+  mid_dim: 256
+  final_dim: 64
+  num_votes: 10
+  num_points: 2048
+  rotate_along_z: False
+  use_cls: True
+  cls_dim: 64
+  use_xyz: True
+  sync_bn: True  # adopt sync_bn or not
+  downsample_scale: 4
+  num_layers: 4 
+  depths: [2, 2, 6, 2] 
+  channels: [48, 96, 192, 384]
+  num_heads: [3, 6, 12, 24]
+  up_k: 3
+  drop_path_rate: 0.5
+  concat_xyz: True
+  grid_size: 0.004
+  max_batch_points: 640000
+  max_num_neighbors: 34 # For KPConv
+  ratio: 0.25
+  k: [[16,16,16],[16,16,16],[16,16,16],[16,16,16]]
+
+  # training
+  aug: True
+  wandb: False
+  transformer_lr_scale: 0.1
+  jitter_sigma: 0.001
+  jitter_clip: 0.005
+  scheduler_update: epoch 
+  scheduler: MultiStep 
+  power: 2.0
+  warmup: linear
+  warmup_iters: 1500
+  warmup_ratio: 0.000001
+  earmup_epochs: 2
+  warmup_gamma: 0.5
+  warmup_cycle_ratio: 0.5
+  use_amp: True
+  optimizer: Adan
+  ignore_label:
+  train_gpu: [0, 1, 2, 3]
+  workers: 8  # data loader workers
+  batch_size: 20  # batch size for training
+  batch_size_val: 20  # batch size for validation during training, memory and speed tradeoff
+  base_lr: 0.01
+  epochs: 300
+  milestones: [210, 270]
+  start_epoch: 0
+  step_epoch: 30
+  multiplier: 0.1
+  momentum: 0.9
+  weight_decay: 0.01
+  drop_rate: 0.5
+  manual_seed: 123
+  print_freq: 10
+  save_freq: 1
+  save_path: output/shapenetpart/cdformer/
+  weight:  # path to initial weight (default: none)
+  resume:  # path to latest checkpoint (default: none)
+  test_model:  # path to model checkpoint (default: none)
+  evaluate: True  # evaluate on validation set, extra gpu memory needed and small batch_size_val is recommend
+  eval_freq: 1
+  debug: 1
+Distributed:
+  multi_node: 0
+  dist_url: tcp://localhost:8888
+  dist_backend: 'nccl'
+  multiprocessing_distributed: True
+  world_size: 1
+  rank: 0
+
+TEST:
+  split: val  # split in [train, val and test]
+  test_gpu: [0]
+  test_workers: 8
+  batch_size_test: 4
+  model_path: # Fill the path of the trained .pth file model
+  save_folder: # Fill the path to store the .npy files for each scene
