@@ -1,6 +1,6 @@
-# CDFormer
+# CDFormer [![arXiv](https://img.shields.io/badge/arXiv-2306.01257-b31b1b)](https://arxiv.org/abs/2306.01257) 
 This is the Pytorch implementation of our following paper:
->**Collect-and-Distribute Transformer for 3D Point Cloud Analysis**
+>**[Collect-and-Distribute Transformer for 3D Point Cloud Analysis](https://arxiv.org/abs/2306.01257)**
 > 
 > *Haibo Qiu, Baosheng Yu, and Dacheng Tao*
 ><details><summary> <b>Abstract</b></summary>
