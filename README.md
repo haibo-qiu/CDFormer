@@ -132,4 +132,12 @@ Other trained models can be similarly evaluated.
 This repo is built based on [Stratified Transformer](https://github.com/dvlab-research/Stratified-Transformer), [Point Transformer](https://github.com/POSTECH-CVLab/point-transformer) and [PointNeXt](https://github.com/guochengqian/PointNeXt). Thanks the contributors of these repos!
 
 ## Citation
-Coming soon
+If you find our paper or code helpful for your research, please consider citing us with:
+```bibtex
+@article{qiu2023collect,
+  title={Collect-and-Distribute Transformer for 3D Point Cloud Analysis},
+  author={Qiu, Haibo and Yu, Baosheng and Tao, Dacheng},
+  journal={arXiv preprint arXiv:2306.01257},
+  year={2023}
+}
+```
